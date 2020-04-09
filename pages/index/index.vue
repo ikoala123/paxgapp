@@ -3,7 +3,7 @@
 	<view class="all-content">
 		<view class="swiper-box-con">
 		    <uni-swiper-dot :info="info" :current="current" field="content" :mode="mode">
-		        <swiper class="swiper-box" @change="change" :autoplay="autoplay">
+		        <swiper class="swiper-box" :autoplay="autoplay"><!-- @change="change" -->
 		            <swiper-item v-for="(item ,index) in info" :key="index">
 		                <image class="imgs" :src="item.content" ></image>
 		            </swiper-item>
@@ -19,45 +19,56 @@
 				</view>
 			</block>
 		</view>
+		<view class="uni-caption">
+			<view class="uni-item">
+				<view class="uni-title">今日运势</view>
+			</view>
+			<view class="uni-item">
+				<view class="uni-column">简单快速，查看每日运势，快来试试吧</view>	
+			</view>
+		</view>
 		
-		<form class="form-action">
-			<view class="uni-form">
-				<view class="uni-form-item uni-title">今日运势</view>
-				<view class="uni-form-item uni-column">简单快速，查看每日运势，快来试试吧</view>				
-				<view class="uni-form-item name-gender">
-					<view class="uni-form-sub uni-name">姓名：
-					        <input class="uni-input" name="input" placeholder="请输入姓名" />
+		<form class="" @submit="formSubmit">
+			<view class="cu-list">				
+				<view class="uni-list-cell">
+					<view class="uni-list-cell-left">输入姓名:</view>
+					<view class="uni-list-input">
+					    <input class="uni-input" name="inputname" placeholder="请输入姓名" maxlength="5"/>
 					</view>
-					<view class="uni-form-sub uni-gender">性别：
-					    <radio-group name="radio">
+				</view>
+				<view class="uni-list-cell">
+					<view class="uni-list-cell-left">选择性别:</view>
+					<view class="uni-list-cell-gender">
+					    <radio-group name="checkgender">
 					        <label>
-					            <radio value="radio1" /><text>男</text>
+					            <radio value="man" /><text>男</text>
 					        </label>
 					        <label>
-					            <radio value="radio2" /><text>女</text>
+					            <radio value="women" /><text>女</text>
 					        </label>
 					    </radio-group>
 					</view>
-				</view>
-				
+				</view>				
 				<view class="uni-list-cell">
-					<view class="uni-list-cell-left">出生日期</view>
-					<view class="uni-list-cell-db">
-						<picker mode="date" name="deliverytime" :value="date" :start="startDate" :end="endDate" @change="bindDateChange">
+					<view class="uni-list-cell-left">出生日期:</view>
+					<view class="uni-list-input">
+						<picker mode="date" name="birthday" :value="date" :start="startDate" :end="endDate" @change="bindDateChange">
 							<view class="uni-input">{{date}}</view>
 						</picker>
 					</view>
 				</view>
 				<view class="uni-list-cell">
-					<view class="uni-list-cell-left">出生时辰</view>
-					<view class="uni-list-cell-db">
-						<picker @change="bindDeliverTimeChange" :value="DeliverTimeIndex" :range="delivertime" range-key="0">
-							<view class="uni-input">{{delivertime[DeliverTimeIndex][0]}}</view>
-							<input style="display: none;" name="day" :value="delivertime[DeliverTimeIndex][1]" />
+					<view class="uni-list-cell-left">出生时辰:</view>
+					<view class="uni-list-input">
+						<picker @change="bindBirthTimeChange" :value="BirthTimeIndex" :range="birthtime" range-key="0">
+							<view class="uni-input">{{birthtime[BirthTimeIndex][0]}}</view>
+							<input style="display: none;" name="birthtime" :value="birthtime[BirthTimeIndex][0]" />
 						</picker>
 					</view>
 				</view>
-				
+				<view class="button-sp-area">
+					<button class="button-area" type="primary" form-type="submit" >查看运势</button>
+				</view>
 			</view>
 		</form>
 			
@@ -85,6 +96,9 @@
 		    uniSwiperDot
 		},
 		data() {
+			const currentDate = this.getDate({
+				format: true
+			});
 			return {
 				autoplay:true,
 				info: [{content: '../../static/swiper/swiper-1.jpg'},				     
@@ -94,21 +108,22 @@
 				mode: 'default',//提示小点的样式
 				//
 				datas: [
-					{type: '123', icon: '/static/home/icon1.png',pageSrc: '/pages/mental/mentalHealth'},
-					{type: '123', icon: '/static/home/icon1.png',pageSrc: '/pages/constellation/constellationAnalysis'},
-					{type: '123', icon: '/static/home/icon1.png',pageSrc: '/pages/numerology/numerology'},
-					{type: '123', icon: '/static/home/icon1.png',pageSrc: '/pages/self/selfEvaluation'}
+					{type: '心理测试', icon: '/static/home/icon1.png',pageSrc: '/pages/mental/mentalHealth'},
+					{type: '星座分析', icon: '/static/home/icon1.png',pageSrc: '/pages/constellation/constellationAnalysis'},
+					{type: '八字运势', icon: '/static/home/icon1.png',pageSrc: '/pages/numerology/numerology'},
+					{type: '趣味测评', icon: '/static/home/icon1.png',pageSrc: '/pages/self/selfEvaluation'}
 				],
-				DeliverTimeIndex: 0,
-				delivertime: [
-					['未知','001'],
+				BirthTimeIndex: 0,
+				birthtime: [
+					['未知(我不知道)','001'],
 					['早子时(00:00-00:59)','002'],
 					['丑时(01:00-02:59)','003'],
 					['寅时(03:00-04:59)','004'],
 					['卯时(05:00-06:59)','005'],
 					['辰时(07:00-08:59)','006'],
+					['巳时(09:00-10:59)','007'],
 				],
-				
+				date: currentDate,
 				news:[],
 			}
 		},
@@ -128,25 +143,82 @@
 				complete: () => {}
 			})
 		},
-		methods: {
-			bindDateChange: function(e) {
-				console.log(e)
-				this.date = e.target.value
+		computed: {
+			startDate() {
+				return this.getDate('start');
 			},
-			bindDeliverTimeChange: function(e) {
-				this.DeliverTimeIndex = e.target.value
+			endDate() {
+				return this.getDate('end');
 			},
 			
+		},
+		methods: {
+			bindDateChange: function(e) {
+				this.date = e.target.value
+			},
+			bindBirthTimeChange: function(e) {
+				this.BirthTimeIndex = e.target.value
+			},
+			getDate(type) {
+				const date = new Date();
+			
+				let year = date.getFullYear();
+				let month = date.getMonth() + 1;
+				let day = date.getDate();
+			
+				if (type === 'start') {
+					year = year;
+				} else if (type === 'end') {
+					year = year + 2;
+				}
+				month = month > 9 ? month : '0' + month;;
+				day = day > 9 ? day : '0' + day;
+			
+				return `${year}-${month}-${day}`;
+			},
+			//表单提交
+			formSubmit(e){
+				let _this = this;
+				let formValue = e.detail.value;
+				console.log(formValue)
+				if(formValue.inputname <= 0){
+					uni.showToast({
+						icon: 'none',
+						title: '请输入姓名'
+					})
+					return;
+				}
+				if(formValue.checkgender <= 0){
+					uni.showToast({
+						icon: 'none',
+						title: '请选择性别'
+					})
+					return;
+				}
+				if(formValue.birthday <= 0){
+					uni.showToast({
+						icon: 'none',
+						title: '请选择出生日期'
+					})
+					return;
+				}
+				if(formValue.birthtime <= 0){
+					uni.showToast({
+						icon: 'none',
+						title: '请选择出生时辰'
+					})
+					return;
+				}
+			},
 			openinfo(e){
 				var newsid = e.currentTarget.dataset.newsid;
 				uni.navigateTo({				
 					url:'../info/info?newsid='+newsid
 				})
 			},
-			change(e) {
-				console.log(e)
-			    this.current = e.detail.current;
-			}
+			// change(e) {
+			//     this.current = e.detail.current;
+			// }
 		}
 	}
 </script>
@@ -171,7 +243,7 @@
 	}
 	/* 中间导航 */
 	.tags {
-		margin-top: 20upx;
+		margin-top: 15px;
 		display: flex;
 		flex-direction: row;
 		flex-wrap: wrap;
@@ -180,7 +252,7 @@
 	.tag {
 		display: flex;
 		width: 140upx;
-		height: 180upx;
+		height: 150upx;
 		box-sizing: border-box;
 		text-align: center;
 		flex-direction: column;
@@ -196,16 +268,48 @@
 		font-size: 24upx;
 		color: #555555;
 	}
-
-	/* 表单 */	
-	.uni-form{
+	/* 说明 */
+	.uni-caption{
+		height:80px;
 		flex-direction: column;
-		margin: 5%;
-		height:250px;		
-		background-image: linear-gradient(#999999, #e5e5e5);
-		border-radius: 10px;		
+		align-items: center;
+		padding: 5px;
+	}
+	.uni-caption .uni-title{
+		font-weight:800;
+	}
+	/* 表单 */	
+	.cu-list{
+		margin:0px 30px;
+		height:220px;		
+		background-image: linear-gradient(#a3aab9, #e5e5e5);
+		border-radius: 10px;
+		flex-direction: column;
 	}
 	
+	.uni-list-cell{
+		margin-top: 8px;
+		justify-content: space-around;
+	}
+	.uni-list-input .uni-input {
+		width: 190px;
+		height: 20px;
+		
+	}
+	.uni-list-cell .uni-list-cell-gender{
+		width: 205px;
+	}
+	.button-sp-area{
+		height: 30px;
+		justify-content: center;
+		margin-top: 8px;		
+	}
+	.button-area{
+		vertical-align:middle;
+		text-align: center;
+		line-height: 30px;
+		width: 180px;
+	}
 	
 	/* 列表 */
 	.uni-padding-wrap{
