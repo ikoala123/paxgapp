@@ -108,10 +108,10 @@
 				mode: 'default',//提示小点的样式
 				//
 				datas: [
-					{type: '心理测试', icon: '/static/home/icon1.png',pageSrc: '/pages/mental/mentalHealth'},
-					{type: '星座分析', icon: '/static/home/icon1.png',pageSrc: '/pages/constellation/constellationAnalysis'},
+					{type: '心理测试', icon: '/static/home/icon1.png',pageSrc: '/pages/mentalhealth/mentalhealth'},
+					{type: '星座分析', icon: '/static/home/icon1.png',pageSrc: '/pages/constellation/constellation'},
 					{type: '八字运势', icon: '/static/home/icon1.png',pageSrc: '/pages/numerology/numerology'},
-					{type: '趣味测评', icon: '/static/home/icon1.png',pageSrc: '/pages/self/selfEvaluation'}
+					{type: '趣味测评', icon: '/static/home/icon1.png',pageSrc: '/pages/selfevaluation/selfevaluation'}
 				],
 				BirthTimeIndex: 0,
 				birthtime: [
@@ -153,6 +153,14 @@
 			
 		},
 		methods: {
+			goPage: function (e) {
+				if(e) {
+					uni.navigateTo({
+						url: e
+					})
+				} 
+			},
+			
 			bindDateChange: function(e) {
 				this.date = e.target.value
 			},
@@ -293,8 +301,7 @@
 	}
 	.uni-list-input .uni-input {
 		width: 190px;
-		height: 20px;
-		
+		height: 20px;		
 	}
 	.uni-list-cell .uni-list-cell-gender{
 		width: 205px;

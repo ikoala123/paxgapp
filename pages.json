@@ -3,7 +3,9 @@
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "首页"
+				"navigationBarTitleText": "首页",
+				//首页不能下拉
+				"enablePullDownRefresh":false
 			}
 		},
 		{
@@ -17,12 +19,43 @@
 			"style": {
 				"navigationBarTitleText": "轮播图"
 			}
-		}
-	],
+		},
+	    {
+            "path" : "pages/mentalhealth/mentalhealth",
+            "style" : {}
+        }
+        ,{
+            "path" : "pages/constellation/constellation",
+            "style" : {}
+        }
+        ,{
+            "path" : "pages/numerology/numerology",
+            "style" : {}
+        }
+        ,{
+            "path" : "pages/selfevaluation/selfevaluation",
+            "style" : {}
+        }
+    ],
+	"tabBar": {
+	    "color": "#7A7E83",
+	    "selectedColor": "#3cc51f",
+	    "borderStyle": "black",
+	    "backgroundColor": "#ffffff",
+	    "list": [{
+	        "pagePath": "pages/index/index",
+	        "text": "首页"
+	    }, {
+	        "pagePath": "pages/swiper/swiper",
+	        "text": "我的"
+	    }]
+	},
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
 		"navigationBarBackgroundColor": "#F8F8F8",
-		"backgroundColor": "#F8F8F8"
+		"backgroundColor": "#F8F8F8",
+		//下拉配置
+		"enablePullDownRefresh":true  
 	}
 }
